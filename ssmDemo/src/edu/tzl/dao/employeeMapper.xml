@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.tzl.dao.employeeMapper">
+	<!-- <resultMap id="BaseResultMap" type="edu.tzl.entity.Employee">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="empName" property="empName" jdbcType="VARCHAR" />
+		<result column="empPwd" property="empPwd" jdbcType="VARCHAR" />
+		<result column="empSex" property="empSex" jdbcType="VARCHAR" />
+		<result column="empAge" property="empAge" jdbcType="VARCHAR" />
+		<result column="empEdu" property="empEdu" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		empName, empPwd,empSex,empAge,empEdu
+	</sql> -->
+	
+	<!-- <select id="queryAll" resultType="Employee">
+		select
+		*
+		from Employee
+	</select> -->
+	
+	<!-- 存储过程分页 -->
+	<!-- 分页查询 -->
+	<parameterMap type="java.util.Map" id="fenye">
+		<parameter property="_pagecurrent" jdbcType="INTEGER" mode="IN"></parameter>
+		<parameter property="_pagesize" jdbcType="INTEGER" mode="IN"></parameter>
+		<parameter property="_ifelse" jdbcType="VARCHAR" mode="IN"></parameter>
+		<parameter property="_where" jdbcType="VARCHAR" mode="IN"></parameter>
+		<parameter property="_order" jdbcType="VARCHAR" mode="IN"></parameter>
+	</parameterMap>
+	
+	<select id="queryAll" statementType="CALLABLE" parameterMap="fenye" resultType="Employee" >
+		{call sp_page(?,?,?,?,?)}
+	</select>
+	
+	<select id="login" parameterType="Employee" resultType="Employee" >
+		select * from
+		Employee where empName=#{empName} and empPwd=#{empPwd}
+	</select>
+	
+	<select id="count" resultType="java.lang.Integer" >
+		select count(*) from
+		Employee 
+	</select>
+	
+	<delete id="deleteById"  parameterType="java.lang.Integer">
+		delete from 
+		Employee where id=#{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="add" parameterType="Employee">
+		insert into 
+		Employee (empName,empPwd,empAge,empSex,empEdu)
+		values(#{empName,jdbcType=VARCHAR},#{empPwd,jdbcType=VARCHAR},#{empAge,jdbcType=VARCHAR},#{empSex,jdbcType=VARCHAR},#{empEdu,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="getById" parameterType="java.lang.Integer" resultType="Employee">
+		select * from 
+		Employee where id=#{id,jdbcType=INTEGER}
+	</select>
+	
+	<update id="update" parameterType="Employee">
+		update Employee set empName=#{empName,jdbcType=VARCHAR},empPwd=#{empPwd,jdbcType=VARCHAR},empAge=#{empAge,jdbcType=VARCHAR},empSex=#{empSex,jdbcType=VARCHAR},empEdu=#{empEdu}
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+</mapper>
